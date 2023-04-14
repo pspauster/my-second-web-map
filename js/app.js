@@ -71,7 +71,7 @@ $.ajax({
                     'red',
                     'Driver Inattention/Distraction',
                     'purple',
-                    'Drive Inexperience',
+                    'Driver Inexperience',
                     'green',
                     'Traffic Control Disregarded',
                     'gold',
@@ -85,7 +85,7 @@ $.ajax({
         const layers = [
             'Unsafe Speed',
             'Driver Inattention/Distraction',
-            'Drive Inexperience',
+            'Driver Inexperience',
             'Traffic Control Disregarded',
             'Oversized Vehicle',
             'Other/Unspecified',
