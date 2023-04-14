@@ -63,22 +63,88 @@ $.ajax({
             type: 'circle',
             source: 'my-points',
             paint: {
-                'circle-opacity' : 0.6,
-                'circle-color': 'red'
+                'circle-opacity': 0.6,
+                'circle-color': [
+                    'match',
+                    ['get', 'contributing_factor_vehicle_1'],
+                    'Unsafe Speed',
+                    'red',
+                    'Driver Inattention/Distraction',
+                    'purple',
+                    'Drive Inexperience',
+                    'green',
+                    'Traffic Control Disregarded',
+                    'gold',
+                    'Oversized Vehicle',
+                    'blue',
+                    /*other*/ '#000000'
+                ]
             },
         })
 
-        console.log(map.getStyle().layers)
+        const layers = [
+            'Unsafe Speed',
+            'Driver Inattention/Distraction',
+            'Drive Inexperience',
+            'Traffic Control Disregarded',
+            'Oversized Vehicle',
+            'Other/Unspecified',
+        ];
+        const colors = [
+            'red',
+            'purple',
+            'green',
+            'gold',
+            'blue',
+            'black'
+        ];
+
+
+        // create legend
+        const legend = document.getElementById('legend');
+
+        layers.forEach((layer, i) => {
+            const color = colors[i];
+            const item = document.createElement('div');
+            const key = document.createElement('span');
+            key.className = 'legend-key';
+            key.style.backgroundColor = color;
+
+            const value = document.createElement('span');
+            value.innerHTML = `${layer}`;
+            item.appendChild(key);
+            item.appendChild(value);
+            legend.appendChild(item);
+        });
+
 
     })
 
-    map.on('click', 'circle-my-points', (e)=>{
+    map.on('click', 'circle-my-points', (e) => {
+
+        // conditional logic for sentence
+        var singPlural = "pedestrians"
+        var verb = "were"
+        if (e.features[0].properties.number_of_persons_killed === '1') {
+            var singPlural = "pedestrian"
+            var verb = "was"
+        }
+
+
+        //popups
         new mapboxgl.Popup()
-        .setLngLat(e.lngLat)
-        .setHTML(e.features[0].properties.number_of_persons_killed)
-        .addTo(map)
+            .setLngLat(e.lngLat)
+            .setHTML(`${e.features[0].properties.number_of_persons_killed} ${singPlural} ${verb} killed by a ${e.features[0].properties.vehicle_type_code1.toLowerCase()} due to ${e.features[0].properties.contributing_factor_vehicle_1.toLowerCase()}`)
+            .addTo(map)
     });
 
+    map.on('mousemove', 'circle-my-points', (event) => {
+        map.getCanvas().style.cursor = 'pointer';
+    })
+
+    map.on('mouseleave', 'circle-my-points', (e) => {
+        map.GetCanvas().style.cursor - ''
+    })
 
 });
 
